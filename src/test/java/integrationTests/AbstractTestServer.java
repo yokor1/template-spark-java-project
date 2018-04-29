@@ -9,7 +9,7 @@ import org.junit.jupiter.api.TestInstance;
 import spark.Service;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public abstract class TestServer {
+public abstract class AbstractTestServer {
   private Service server;
 
   @BeforeAll

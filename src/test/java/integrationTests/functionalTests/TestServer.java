@@ -1,19 +1,19 @@
-package integrationTests.edgeTests;
+package integrationTests.functionalTests;
 
 
 import ca.korichi.java10spark.context.AppHandlersFactory;
 import ca.korichi.java10spark.context.AppHandlersFactoryTemplate;
 import ca.korichi.java10spark.service.heartbeat.HeartbeatService;
+import ca.korichi.java10spark.service.heartbeat.LessInfosHeartbeatService;
+import ca.korichi.java10spark.service.heartbeat.SystemClock;
 import integrationTests.AbstractTestServer;
 
-import static org.mockito.Mockito.mock;
-
-public class TestServerWithMockedHandlers extends AbstractTestServer {
+public class TestServer extends AbstractTestServer {
   protected static HeartbeatService heartbeatService;
 
   @Override
   protected AppHandlersFactory getAppHandlersFactory() {
-    heartbeatService = mock(HeartbeatService.class);
+    heartbeatService = new LessInfosHeartbeatService(new SystemClock());
 
     return new AppHandlersFactoryTemplate() {
       @Override
