@@ -1,4 +1,4 @@
-package routes;
+package integrationTests;
 
 import ca.korichi.java10spark.Parameters;
 import ca.korichi.java10spark.api.AppServer;
@@ -9,7 +9,7 @@ import org.junit.jupiter.api.TestInstance;
 import spark.Service;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public abstract class TestServer {
+public abstract class AbstractTestServer {
   private Service server;
 
   @BeforeAll

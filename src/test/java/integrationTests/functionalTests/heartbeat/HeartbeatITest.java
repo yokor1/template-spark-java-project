@@ -1,17 +1,16 @@
-package routes.heartbeat;
+package integrationTests.functionalTests.heartbeat;
 
 import ca.korichi.java10spark.Parameters;
 import ca.korichi.java10spark.api.routes.heartbeat.HeartbeatResponseDto;
+import integrationTests.functionalTests.TestServer;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import routes.TestServerWithMockedHandlers;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.willReturn;
 
 //@Disabled
-class HeartbeatHandlerEdgeITest extends TestServerWithMockedHandlers {
+class HeartbeatITest extends TestServer {
 
   @Test
   @DisplayName("when beat is requested the server returns the provided token")
@@ -21,7 +20,6 @@ class HeartbeatHandlerEdgeITest extends TestServerWithMockedHandlers {
     long aTimestamp = 100;
     HeartbeatResponseDto expectedHeartbeatDTO = new HeartbeatResponseDto()
         .setToken(aToken).setTimestamp(aTimestamp);
-    willReturn(expectedHeartbeatDTO).given(heartbeatService).beat(aToken);
 
     HeartbeatResponseDto heartbeatResponseDto = given()
         .port(Parameters.DEV_PORT)
@@ -44,7 +42,6 @@ class HeartbeatHandlerEdgeITest extends TestServerWithMockedHandlers {
     long aTimestamp = 100;
     HeartbeatResponseDto expectedHeartbeatDTO = new HeartbeatResponseDto()
         .setToken(aToken).setTimestamp(aTimestamp);
-    willReturn(expectedHeartbeatDTO).given(heartbeatService).beat(aToken);
 
     HeartbeatResponseDto heartbeatResponseDto = given()
         .port(Parameters.DEV_PORT)
@@ -55,11 +52,11 @@ class HeartbeatHandlerEdgeITest extends TestServerWithMockedHandlers {
         .then()
         .extract().as(HeartbeatResponseDto.class);
 
-    assertThat(heartbeatResponseDto.timestamp).isEqualTo(aTimestamp);
+    assertThat(heartbeatResponseDto.timestamp).isNotNull();
   }
 
   @Test
-  @DisplayName("when beat is requested the server returns a timestamp")
+  @DisplayName("when beat is requested the server returns 200 as status")
   public void whenBeatIsRequested_thenTheServerReturnsOKStatus() {
 
     String aToken = "token";
@@ -67,7 +64,6 @@ class HeartbeatHandlerEdgeITest extends TestServerWithMockedHandlers {
     HeartbeatResponseDto expectedHeartbeatDTO = new HeartbeatResponseDto()
         .setToken(aToken).setTimestamp(aTimestamp);
     int expectedStatusCode = Parameters.Status.OK;
-    willReturn(expectedHeartbeatDTO).given(heartbeatService).beat(aToken);
 
     given().port(Parameters.DEV_PORT)
         .param("token", expectedHeartbeatDTO.token)
