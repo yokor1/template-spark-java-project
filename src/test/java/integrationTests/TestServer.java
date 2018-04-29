@@ -1,4 +1,4 @@
-package routes;
+package integrationTests;
 
 import ca.korichi.java10spark.Parameters;
 import ca.korichi.java10spark.api.AppServer;

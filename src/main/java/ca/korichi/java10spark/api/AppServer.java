@@ -1,7 +1,5 @@
 package ca.korichi.java10spark.api;
 
-
-import ca.korichi.java10spark.api.routes.greeting.GreetingRoutes;
 import ca.korichi.java10spark.api.routes.heartbeat.HeartbeatRoutes;
 import ca.korichi.java10spark.context.AppHandlersFactory;
 import spark.Filter;
@@ -34,7 +32,6 @@ public class AppServer {
 
     httpService.before(consumedContentTypeFilter);
     httpService.after(producedContentType);
-    new GreetingRoutes(appHandlersFactory.getGreetingHandler()).init(httpService);
     new HeartbeatRoutes(appHandlersFactory.getHeartbeatHandler()).init(httpService);
 
     return httpService;

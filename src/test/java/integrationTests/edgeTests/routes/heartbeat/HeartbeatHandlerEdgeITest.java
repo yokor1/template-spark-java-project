@@ -1,10 +1,10 @@
-package routes.heartbeat;
+package integrationTests.edgeTests.routes.heartbeat;
 
 import ca.korichi.java10spark.Parameters;
 import ca.korichi.java10spark.api.routes.heartbeat.HeartbeatResponseDto;
+import integrationTests.edgeTests.TestServerWithMockedHandlers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import routes.TestServerWithMockedHandlers;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
