@@ -10,7 +10,6 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.willReturn;
 
-//@Disabled
 class HeartbeatHandlerEdgeITest extends TestServerWithMockedHandlers {
 
   @Test
@@ -71,6 +70,20 @@ class HeartbeatHandlerEdgeITest extends TestServerWithMockedHandlers {
 
     given().port(Parameters.DEV_PORT)
         .param("token", expectedHeartbeatDTO.token)
+        .contentType("application/json")
+        .when()
+        .get(Parameters.Paths.HEARTBEAT)
+        .then()
+        .statusCode(expectedStatusCode);
+  }
+
+  @Test
+  @DisplayName("when beat is requested the server returns 200 as status")
+  public void whenBeatIsRequestedWithoutToken_thenTheServerReturnsBadRequestStatus() {
+
+    int expectedStatusCode = Parameters.Status.BAD_REQUEST;
+
+    given().port(Parameters.DEV_PORT)
         .contentType("application/json")
         .when()
         .get(Parameters.Paths.HEARTBEAT)
