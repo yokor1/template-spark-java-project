@@ -1,8 +1,8 @@
 package ca.korichi.java10spark.context;
 
-import spark.Route;
+import ca.korichi.java10spark.api.routes.heartbeat.HeartbeatApi;
 
 public interface AppHandlersFactory {
 
-  Route getHeartbeatHandler();
+  HeartbeatApi getHeartbeatApi();
 }

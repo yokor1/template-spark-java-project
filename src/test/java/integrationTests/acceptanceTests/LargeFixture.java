@@ -2,14 +2,15 @@ package integrationTests.acceptanceTests;
 
 import ca.korichi.java10spark.Parameters;
 import ca.korichi.java10spark.api.routes.heartbeat.HeartbeatResponseDto;
+import io.restassured.response.ValidatableResponse;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class LargeFixture implements Fixture {
   private String token;
-  private String returnedToken;
-  private long returnedTimestamp;
+
+  private ValidatableResponse validatableResponse;
 
   @Override
   public void clean() {
@@ -23,32 +24,37 @@ public class LargeFixture implements Fixture {
 
   @Override
   public void requestBeat() {
-    HeartbeatResponseDto expectedHeartbeatDTO =
-        new HeartbeatResponseDto()
-            .setToken(token);
-    HeartbeatResponseDto heartbeatResponseDto = given()
-        .port(Parameters.DEV_PORT)
-        .param("token", expectedHeartbeatDTO.token)
+    validatableResponse = given()
+        .port(Parameters.ACC_TEST_PORT)
+        .param("token", token)
         .contentType("application/json")
         .when()
         .get(Parameters.Paths.HEARTBEAT)
-        .then()
-        .statusCode(200)
-        .extract().as(HeartbeatResponseDto.class);
-    returnedToken = heartbeatResponseDto.token;
-    returnedTimestamp = heartbeatResponseDto.timestamp;
-
+        .then();
   }
 
   @Override
   public void tokenIsReturned() {
-
-    assertThat(returnedToken).isEqualTo(token);
+    HeartbeatResponseDto heartbeatResponseDto =
+        validatableResponse.extract().as(HeartbeatResponseDto.class);
+    assertThat(heartbeatResponseDto.token).isEqualTo(token);
 
   }
 
   @Override
   public void timestampIsReturned() {
-    assertThat(returnedTimestamp).isNotNull();
+    HeartbeatResponseDto heartbeatResponseDto =
+        validatableResponse.extract().as(HeartbeatResponseDto.class);
+    assertThat(heartbeatResponseDto.timestamp).isNotNull();
+  }
+
+  @Override
+  public void createInvalidToken() {
+    token = null;
+  }
+
+  @Override
+  public void codeStatusIsEqualTo(int codeStatus) {
+    validatableResponse.statusCode(codeStatus);
   }
 }

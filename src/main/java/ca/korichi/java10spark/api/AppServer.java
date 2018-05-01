@@ -1,12 +1,8 @@
 package ca.korichi.java10spark.api;
 
-import ca.korichi.java10spark.api.routes.heartbeat.HeartbeatRoutes;
+
 import ca.korichi.java10spark.context.AppHandlersFactory;
-import spark.Filter;
 import spark.Service;
-
-import static spark.Spark.halt;
-
 
 public class AppServer {
   private final AppHandlersFactory appHandlersFactory;
@@ -15,25 +11,22 @@ public class AppServer {
     this.appHandlersFactory = appHandlersFactory;
   }
 
-  public Service start(int port) {
+  public Service start(int port) throws InterruptedException {
 
-    Filter consumedContentTypeFilter = (request, response) -> {
-      String contentType = request.contentType();
-      if (contentType == null || !contentType.contains("application/json")) {
-        halt(401, "bad content type");
-      }
-    };
-    Filter producedContentType = (request, response) ->
-        response.type("application/json");
+    Service httpService = null;
 
-    Service httpService = Service
-        .ignite()
-        .port(port);
+    try {
+      httpService = Service.ignite().port(port);
+      new Filtering().init(httpService);
+      new ExceptionsMapping().init(httpService);
+      new Routing(appHandlersFactory).init(httpService);
+      return httpService;
 
-    httpService.before(consumedContentTypeFilter);
-    httpService.after(producedContentType);
-    new HeartbeatRoutes(appHandlersFactory.getHeartbeatHandler()).init(httpService);
+    } catch (Exception exception) {
+      //catch block
+    }
 
+    System.exit(-1);
     return httpService;
   }
 }

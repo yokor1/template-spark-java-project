@@ -1,19 +1,17 @@
 package ca.korichi.java10spark.api.routes.heartbeat;
 
-
 import ca.korichi.java10spark.Parameters;
 import ca.korichi.java10spark.api.JsonTransformer;
-import spark.Route;
 import spark.Service;
 
 public class HeartbeatRoutes {
-  private final Route heartbeatHandler;
+  private final HeartbeatApi heartbeatApi;
 
-  public HeartbeatRoutes(Route heartbeatHandler) {
-    this.heartbeatHandler = heartbeatHandler;
+  public HeartbeatRoutes(HeartbeatApi heartbeatApi) {
+    this.heartbeatApi = heartbeatApi;
   }
 
   public void init(Service httpService) {
-    httpService.get(Parameters.Paths.HEARTBEAT, heartbeatHandler, new JsonTransformer());
+    httpService.get(Parameters.Paths.HEARTBEAT, heartbeatApi.beatHandler(), new JsonTransformer());
   }
 }
