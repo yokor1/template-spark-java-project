@@ -10,4 +10,8 @@ public interface Fixture {
   void tokenIsReturned();
 
   void timestampIsReturned();
+
+  void createInvalidToken();
+
+  void codeStatusIsEqualTo(int codeStatus);
 }

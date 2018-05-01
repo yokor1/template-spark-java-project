@@ -5,8 +5,6 @@ import ca.korichi.java10spark.api.routes.InvalidUserInputException;
 import ca.korichi.java10spark.service.heartbeat.HeartbeatService;
 import spark.Route;
 
-import java.util.Optional;
-
 public class HeartbeatApiImpl implements HeartbeatApi {
   private final HeartbeatService heartbeatService;
 
@@ -17,8 +15,10 @@ public class HeartbeatApiImpl implements HeartbeatApi {
   @Override
   public Route beatHandler() {
     return (request, response) -> {
-      String token = Optional.ofNullable(request.queryParams("token"))
-          .orElseThrow(() -> new InvalidUserInputException("bad token."));
+      String token = request.queryParams("token");
+      if (token == null || token.isEmpty()) {
+        throw new InvalidUserInputException("bad token.");
+      }
       response.status(Parameters.Status.OK);
       return heartbeatService.beat(token);
     };

@@ -7,7 +7,7 @@ import ca.korichi.java10spark.context.ProdAppHandlersFactory;
 
 public class App {
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws InterruptedException {
     //select env (prod-dev)
     AppHandlersFactory appHandlersFactory = new ProdAppHandlersFactory();
 

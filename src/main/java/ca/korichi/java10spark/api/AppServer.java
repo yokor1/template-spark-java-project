@@ -11,14 +11,22 @@ public class AppServer {
     this.appHandlersFactory = appHandlersFactory;
   }
 
-  public Service start(int port) {
+  public Service start(int port) throws InterruptedException {
 
-    Service httpService = Service.ignite().port(port);
+    Service httpService = null;
 
-    new Filtering().init(httpService);
-    new ExceptionsMapping().init(httpService);
-    new Routing(appHandlersFactory).init(httpService);
+    try {
+      httpService = Service.ignite().port(port);
+      new Filtering().init(httpService);
+      new ExceptionsMapping().init(httpService);
+      new Routing(appHandlersFactory).init(httpService);
+      return httpService;
 
+    } catch (Exception exception) {
+      //catch block
+    }
+
+    System.exit(-1);
     return httpService;
   }
 }

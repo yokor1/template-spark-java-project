@@ -14,7 +14,11 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import spark.Service;
 
+import java.util.Random;
+
+
 public class MyStepdefs {
+
   private Fixture fixture;
   private Service testServer;
 
@@ -28,16 +32,18 @@ public class MyStepdefs {
   }
 
   @Before
-  public void setup() {
+  public void setup() throws InterruptedException {
     fixture = new LargeFixture();
-    System.out.println("start test server");
-    testServer = new AppServer(getAppHandlersFactory()).start(Parameters.DEV_PORT);
+    Parameters.ACC_TEST_PORT = 11000 + new Random().nextInt(50);
+    testServer = new AppServer(getAppHandlersFactory()).start(Parameters.ACC_TEST_PORT);
+    testServer.awaitInitialization();
   }
 
   @After
-  public void tearDown() {
+  public void tearDown() throws InterruptedException {
     fixture.clean();
     testServer.stop();
+
   }
 
   @Given("^a token$")
@@ -58,5 +64,18 @@ public class MyStepdefs {
   @Then("^a timestamp is returned$")
   public void aTimestampIsReturned() {
     fixture.timestampIsReturned();
+  }
+
+  @Given("^an invalid token$")
+  public void anInvalidToken() throws Throwable {
+    // Write code here that turns the phrase above into concrete actions
+    fixture.createInvalidToken();
+  }
+
+
+  @Then("^a <(\\d+)> request status is returned$")
+  public void aRequestStatusIsReturned(int codeStatus) throws Throwable {
+    // Write code here that turns the phrase above into concrete actions
+    fixture.codeStatusIsEqualTo(codeStatus);
   }
 }
